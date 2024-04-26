@@ -1,3 +1,3 @@
- const Base_Api="http://localhost:5000/api" ;
+ const Base_Api="https://chat-mania-server.vercel.app/api" ;
 export default {Base_Api}
 
