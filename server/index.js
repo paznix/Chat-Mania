@@ -35,7 +35,7 @@ const server = app.listen(process.env.PORT, () =>
 const io = require("socket.io")(server, {
   pingTimeout: 60000, //the connection is active only for the 60 sec and after that the connection is closed to save the bandwidth
   cors: {
-    origin: "https://chat-mania-client.vercel.app",
+    origin: "http://localhost:3000",
   },
 });
 
