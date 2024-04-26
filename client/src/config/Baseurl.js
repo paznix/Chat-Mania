@@ -1,1 +1,1 @@
-export const BaseUrl="https://chatmania.onrender.com/api/";
+export const BaseUrl="https://chat-mania-server.vercel.app/api/";
