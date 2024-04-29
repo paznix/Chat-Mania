@@ -8,7 +8,6 @@ const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const { TokenExpiredError } = require("jsonwebtoken");
 const AudioCall = require("./models/audioCall");
-const VideoCall = require("./models/videoCall");
 
 // const {notFound,errorHandler} =require("./middleware/errorMiddleware");
 // require('dotenv').config({path:'./.env'})

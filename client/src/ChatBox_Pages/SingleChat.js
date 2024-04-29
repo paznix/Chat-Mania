@@ -28,8 +28,6 @@ var socket, selectedChatCompare;
 //socket code end
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
-  const { selectedChat, setSelectedChat, user, notification, setNotification } =
-    ContextState();
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState();
   const [newmessages, setNewMessages] = useState("");
@@ -47,11 +45,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     },
   };
 
-  useEffect(() => {
-    fetchMessages();
-    selectedChatCompare = selectedChat;
-    // eslint-disable-next-line
-  }, [selectedChat]);
+  const { selectedChat, setSelectedChat, user, notification, setNotification } =
+    ContextState();
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -59,10 +54,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     try {
       const config = {
         headers: {
-          "Content-type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
       };
+
       setLoading(true);
 
       const { data } = await axios.get(
@@ -90,7 +85,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     if (event.key === "Enter" && newmessages) {
       socket.emit("stop typing", selectedChat._id);
       try {
-        //console.log(newmessages);
         const config = {
           headers: {
             "Content-type": "application/json",
@@ -103,9 +97,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           { chatId: selectedChat, content: newmessages },
           config
         );
-        // console.log(data);
         socket.emit("new message", data);
-        // console.log("Message 1:",messages);
         setMessages([...messages, data]);
       } catch (error) {
         toast({
@@ -130,6 +122,12 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
     // eslint-disable-next-line
   }, []);
+
+  useEffect(() => {
+    fetchMessages();
+    selectedChatCompare = selectedChat;
+    // eslint-disable-next-line
+  }, [selectedChat]);
 
   const typingHandler = (e) => {
     setNewMessages(e.target.value);
@@ -162,6 +160,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         selectedChatCompare._id !== newmessagesRecieved.chat._id
       ) {
         //give notification
+        if (!notification?.includes(newmessagesRecieved)) {
+          setNotification([newmessagesRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
       } else {
         setMessages([...messages, newmessagesRecieved]);
       }
@@ -191,18 +193,19 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               color={"white"}
               size={"2px"}
             />
-            {messages && !selectedChat.isGroupChat ? (
-              <>{getSender(user, selectedChat.users)}</>
-            ) : (
-              <>
-                {selectedChat.chatName.toUpperCase()}
-                <UpdateGroupChat
-                  fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
-                  fetchMessages={fetchMessages}
-                />
-              </>
-            )}
+            {messages &&
+              (!selectedChat.isGroupChat ? (
+                <>{getSender(user, selectedChat.users)}</>
+              ) : (
+                <>
+                  {selectedChat.chatName.toUpperCase()}
+                  <UpdateGroupChat
+                    fetchAgain={fetchAgain}
+                    setFetchAgain={setFetchAgain}
+                    fetchMessages={fetchMessages}
+                  />
+                </>
+              ))}
           </Text>
 
           <Box

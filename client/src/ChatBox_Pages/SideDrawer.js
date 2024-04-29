@@ -10,6 +10,8 @@ import {
   Toast,
   Spinner,
   Flex,
+  MenuButton,
+  MenuList,
 } from "@chakra-ui/react";
 import { Button } from "@chakra-ui/button";
 import React, { useState } from "react";
@@ -28,13 +30,23 @@ import { useToast } from "@chakra-ui/react";
 import axios from "axios";
 import ChatLoading from "./ChatLoading";
 import UserListItem from "./UsersSideDrawer/UserListItem";
+import NotificationBadge, { Effect } from "react-notification-badge";
+import { IoIosNotifications } from "react-icons/io";
+import { getSender } from "../config/ChatLogic";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState();
-  const { user, setSelectedChat, chats, setChats } = ContextState();
+  const {
+    user,
+    setSelectedChat,
+    chats,
+    setChats,
+    notification,
+    setNotification,
+  } = ContextState();
   const navigate = useNavigate();
   const toast = useToast();
   //for right side drawer
@@ -94,9 +106,8 @@ const SideDrawer = () => {
         { userId: userId },
         config
       );
-      //Not understand
-      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
 
+      if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);
       setLoadingChat(false);
       onClose();
@@ -123,7 +134,7 @@ const SideDrawer = () => {
         alignItems="center"
         w="100%"
         p="15px 10px 15px 20px"
-        px={{base:5, md:6 }}
+        px={{ base: 5, md: 6 }}
       >
         <Tooltip
           label="Search Users to chat"
@@ -149,7 +160,35 @@ const SideDrawer = () => {
           </h2>
         </div>
 
-        <div className="flex justify-between text-red-300">
+        <div className="flex justify-between text-slate-500">
+          <Menu>
+            <MenuButton p={1}>
+              <NotificationBadge
+                count={notification?.length}
+                effect={Effect.SCALE}
+              />
+              <IoIosNotifications className="text-2xl text-gray-100 mr-2 " />
+            </MenuButton>
+            <MenuList px={2}>
+              {!notification?.length && "No New Messages"}
+              {notification?.map((notif) => (
+                <MenuItem
+                  key={notif._id}
+                  onClick={() => {
+                    setSelectedChat(notif.chat);
+                    setNotification(
+                      notification.filter((n) => n.chat._id !== notif.chat._id)
+                    );
+                  }}
+                >
+                  {notif.chat.isGroupChat
+                    ? `New Message in ${notif.chat.chatName}`
+                    : `New Message from ${getSender(user, notif.chat.users)}`}
+                  {notif.chat.users && notif.chat.users.length > 0}
+                </MenuItem>
+              ))}
+            </MenuList>
+          </Menu>
           <Menu>
             <ProfileModal>
               <Tooltip label="Profile" hasArrow>
@@ -161,7 +200,6 @@ const SideDrawer = () => {
                     cursor="pointer"
                     name={user.name}
                     src={user.pic}
-
                   />
                 </MenuItem>
               </Tooltip>
