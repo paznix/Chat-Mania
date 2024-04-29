@@ -7,6 +7,8 @@ const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const { TokenExpiredError } = require("jsonwebtoken");
+const AudioCall = require("./models/audioCall");
+const VideoCall = require("./models/videoCall");
 
 // const {notFound,errorHandler} =require("./middleware/errorMiddleware");
 // require('dotenv').config({path:'./.env'})
@@ -20,7 +22,6 @@ app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/messages", messageRoutes);
-
 
 app.get("/", (req, res) => {
   res.send("Hello");
@@ -63,6 +64,110 @@ io.on("connection", (socket) => {
       if (user._id === newmessageRecieved.sender._id) return;
 
       socket.in(user._id).emit("message recieved", newmessageRecieved);
+    });
+  });
+
+  // -------------- HANDLE AUDIO CALL SOCKET EVENTS ----------------- //
+
+  // handle start_audio_call event
+  socket.on("start_audio_call", async (data) => {
+    const { from, to, roomID } = data;
+
+    const to_user = await User.findById(to);
+    const from_user = await User.findById(from);
+
+    console.log("to_user", to_user);
+
+    // send notification to receiver of call
+    io.to(to_user?.socket_id).emit("audio_call_notification", {
+      from: from_user,
+      roomID,
+      streamID: from,
+      userID: to,
+      userName: to,
+    });
+  });
+
+  // handle audio_call_not_picked
+  socket.on("audio_call_not_picked", async (data) => {
+    console.log(data);
+    // find and update call record
+    const { to, from } = data;
+
+    const to_user = await User.findById(to);
+
+    await AudioCall.findOneAndUpdate(
+      {
+        participants: { $size: 2, $all: [to, from] },
+      },
+      { verdict: "Missed", status: "Ended", endedAt: Date.now() }
+    );
+
+    // TODO => emit call_missed to receiver of call
+    io.to(to_user?.socket_id).emit("audio_call_missed", {
+      from,
+      to,
+    });
+  });
+
+  // handle audio_call_accepted
+  socket.on("audio_call_accepted", async (data) => {
+    const { to, from } = data;
+
+    const from_user = await User.findById(from);
+
+    // find and update call record
+    await AudioCall.findOneAndUpdate(
+      {
+        participants: { $size: 2, $all: [to, from] },
+      },
+      { verdict: "Accepted" }
+    );
+
+    // TODO => emit call_accepted to sender of call
+    io.to(from_user?.socket_id).emit("audio_call_accepted", {
+      from,
+      to,
+    });
+  });
+
+  // handle audio_call_denied
+  socket.on("audio_call_denied", async (data) => {
+    // find and update call record
+    const { to, from } = data;
+
+    await AudioCall.findOneAndUpdate(
+      {
+        participants: { $size: 2, $all: [to, from] },
+      },
+      { verdict: "Denied", status: "Ended", endedAt: Date.now() }
+    );
+
+    const from_user = await User.findById(from);
+    // TODO => emit call_denied to sender of call
+
+    io.to(from_user?.socket_id).emit("audio_call_denied", {
+      from,
+      to,
+    });
+  });
+
+  // handle user_is_busy_audio_call
+  socket.on("user_is_busy_audio_call", async (data) => {
+    const { to, from } = data;
+    // find and update call record
+    await AudioCall.findOneAndUpdate(
+      {
+        participants: { $size: 2, $all: [to, from] },
+      },
+      { verdict: "Busy", status: "Ended", endedAt: Date.now() }
+    );
+
+    const from_user = await User.findById(from);
+    // TODO => emit on_another_audio_call to sender of call
+    io.to(from_user?.socket_id).emit("on_another_audio_call", {
+      from,
+      to,
     });
   });
 });

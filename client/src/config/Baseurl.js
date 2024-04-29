@@ -1,1 +1,1 @@
-export const BaseUrl="https://chat-mania-server.vercel.app/api/";
+export const BaseUrl="http://localhost:5000/api/";

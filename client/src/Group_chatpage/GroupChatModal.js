@@ -186,7 +186,7 @@ const GroupChatModal = ({ children }) => {
           </ModalBody>
 
           <ModalFooter >
-            <button style={{transitionDuration:"0.33s"}} className="bg-purple-100 hover:bg-purple-300 px-3 py-1 rounded-md font-pal font-semibold" onClick={handleSubmit}>
+            <button style={{transitionDuration:"0.33s"}} className="hover:bg-purple-200 bg-purple-300 px-3 py-1 rounded-md font-pal font-semibold" onClick={handleSubmit}>
               Create
             </button>
             

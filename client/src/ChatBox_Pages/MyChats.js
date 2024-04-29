@@ -116,9 +116,7 @@ const MyChats = ({ fetchAgain }) => {
                 borderRadius="xl"
                 key={chat._id}
               >
-                <Image className="w-12 h-12"  borderRadius="full" src={chat.pic}
                 
-                />
                 <div className="flex flex-col">
                   <Text>
                   {!chat.isGroupChat
