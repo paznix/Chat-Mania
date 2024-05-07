@@ -17,7 +17,7 @@ import { BaseUrl } from "../../config/Baseurl";
 const Signup = () => {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
-  const [confirmpassword, setConfirmpassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState();
   const [password, setPassword] = useState();
   const [pic, setPic] = useState();
   const [show, setShow] = useState(false);
@@ -73,7 +73,7 @@ const Signup = () => {
   };
   const submitHandler = async () => {
     setLoading(true);
-    if (!name || !email || !password || !confirmpassword) {
+    if (!name || !email || !password || !confirmPassword) {
       toast({
         title: "Please Fill all the Fields",
         status: "Warning",
@@ -85,7 +85,7 @@ const Signup = () => {
       return;
     }
 
-    if (password !== confirmpassword) {
+    if (password !== confirmPassword) {
       toast({
         title: "Passwords do not match",
         status: "Warning",
@@ -147,42 +147,54 @@ const Signup = () => {
     }
   };
   return (
-    <VStack spacing="8px">
+    <VStack color={"purple.600"} spacing="8px" fontFamily={'Roboto'} className="font-medium">
       <FormControl
-        className="border-gray-700 border-hidden"
-        id="first-name"
+        className="border-purple-700/40 border-hidden"
+        id="email"
         isRequired
       >
-        <FormLabel>Name</FormLabel>
+        <FormLabel color={"purple.470"} fontWeight={"semibold"}>
+          Full Name
+        </FormLabel>
         <Input
-          placeholder="Enter your Name"
+          color={"purple.400"}
+          value={name}
+          placeholder="Chat Mania"
           onChange={(e) => setName(e.target.value)}
         />
       </FormControl>
 
       <FormControl
-        className="border-gray-700 border-hidden"
+        className="border-purple-700/40 border-hidden"
         id="email"
         isRequired
       >
-        <FormLabel>Email</FormLabel>
+        <FormLabel color={"purple.470"} fontWeight={"semibold"}>
+          Email
+        </FormLabel>
         <Input
-          placeholder="Enter your Email"
+          color={"purple.400"}
+          value={email}
+          placeholder="chatmania@example.com"
           onChange={(e) => setEmail(e.target.value)}
         />
       </FormControl>
 
       <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
-        <InputGroup className="border-gray-700 border-hidden">
+        <FormLabel fontWeight={"semibold"}>Password</FormLabel>
+        <InputGroup className="border-purple-700/40 border-hidden">
           <Input
+            value={password}
             type={show ? "text" : "password"}
-            placeholder="Enter your Password"
+            color={"purple.400"}
+            placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
             <Button
-              colorScheme="black"
+              _hover={{ background: "transparent" }}
+              background={"transparent"}
+              color={"purple.700"}
               h="1.75rem"
               size="lg"
               onClick={handleclick}
@@ -193,17 +205,21 @@ const Signup = () => {
         </InputGroup>
       </FormControl>
 
-      <FormControl id="confirm-password" isRequired>
-        <FormLabel>Confirm Password</FormLabel>
-        <InputGroup className="border-gray-700 border-hidden">
+      <FormControl id="password" isRequired>
+        <FormLabel fontWeight={"semibold"}>Confirm Password</FormLabel>
+        <InputGroup className="border-purple-700/40 border-hidden">
           <Input
+            value={confirmPassword}
             type={show ? "text" : "password"}
-            placeholder="Confirm your Password"
-            onChange={(e) => setConfirmpassword(e.target.value)}
+            color={"purple.400"}
+            placeholder="Confirm Password"
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <InputRightElement width="4.5rem">
             <Button
-              colorScheme="black"
+              _hover={{ background: "transparent" }}
+              background={"transparent"}
+              color={"purple.700"}
               h="1.75rem"
               size="lg"
               onClick={handleclick}
@@ -214,20 +230,24 @@ const Signup = () => {
         </InputGroup>
       </FormControl>
 
-      <FormControl className="border-gray-700 border-hidden" id="pic">
-        <FormLabel>Upload your Picture</FormLabel>
+      <FormControl className="border-purple-700/40 border-hidden" id="pic">
+        <FormLabel fontWeight={"semibold"}>Profile Picture</FormLabel>
         <Input
           type="file"
-          pt={1}
-          pl={1}
+          pt={1.5}
+          pl={2}
           accept="image/*"
           onChange={(e) => postDetails(e.target.files[0])}
         />
       </FormControl>
 
-      <button className="w-full bg-purple-500 hover:bg-purple-400 transition rounded-lg py-2.5 font-farro font-medium mt-5" onClick={submitHandler} isLoading={loading}>
-      Sign Up
-    </button>
+      <button
+        className="w-full bg-purple-500 hover:bg-purple-400 transition rounded-lg py-2.5 text-white font-medium mt-5"
+        onClick={submitHandler}
+        isLoading={loading}
+      >
+        Sign Up
+      </button>
       {/* <Button
         colorScheme="blue"
         width="100%"

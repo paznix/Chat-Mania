@@ -9,7 +9,7 @@ const UserListItem = (props) => {
     bg="#E8E8E8"
     _hover={{
       background:"#bf74f7",
-     transitionDuration:"0.2s",
+     transitionDuration:"0.1s",
      transitionTimingFunction:"ease-in",
      color:"white",
     }}

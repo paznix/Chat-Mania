@@ -33,6 +33,7 @@ import UserListItem from "./UsersSideDrawer/UserListItem";
 import NotificationBadge, { Effect } from "react-notification-badge";
 import { IoIosNotifications } from "react-icons/io";
 import { getSender } from "../config/ChatLogic";
+import Logo from "../logo.png";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -127,13 +128,13 @@ const SideDrawer = () => {
     <div>
       <Box
         fontFamily="Palanquin"
-        className=" bg-black bg-opacity-50 backdrop-blur-2xl text-white shadow-lg "
+        className=" bg-[#10001c] backdrop-blur-2xl text-black shadow-xl "
         display="flex"
         flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
         w="100%"
-        p="15px 10px 15px 20px"
+        p="2px 10px 4px 20px"
         px={{ base: 5, md: 6 }}
       >
         <Tooltip
@@ -142,7 +143,10 @@ const SideDrawer = () => {
           placeContent="bottom-end"
         >
           <Button
-            className="bg-white bg-opacity-10 text-white hover:text-gray-600"
+            color={"white"}
+            _hover={{ background: "transparent" }}
+            background={"transparent"}
+            className="bg-white/20 bg-opacity-10 text-white hover:text-gray-400"
             onClick={onOpen}
           >
             <i class="fa-solid fa-search "></i>
@@ -151,24 +155,21 @@ const SideDrawer = () => {
             </Text>
           </Button>
         </Tooltip>
-        <div className="text-white pt-1 lg:pr-24">
-          <h2 className="select-none relative text-purple-500 md:py-2 py-3 md:text-4xl text-3xl font-bold italic font-farro">
-            CHAT MANIA
-          </h2>
-          <h2 className="select-none absolute top-4  md:py-2 py-3 md:text-4xl text-3xl font-bold italic font-farro">
-            CHAT MANIA
-          </h2>
+        <div className="text-white pt-2 font-farro flex items-center justify-center w-full gap-3 mb-2 ml-14 md:ml-0">
+          <img src={Logo} className="w-16 h-16" />
+          <h3 className="text-3xl pt-1 hidden md:block">Chat Mania</h3>
         </div>
 
-        <div className="flex justify-between text-slate-500">
+        <div className="flex justify-center md:justify-between text-slate-600">
           <Menu>
-            <MenuButton p={1}>
+            <MenuButton p={1} mr={{base:"2", md:"5"}}>
               <NotificationBadge
                 count={notification?.length}
                 effect={Effect.SCALE}
               />
-              <IoIosNotifications className="text-2xl text-gray-100 mr-2 " />
+              <IoIosNotifications className="text-2xl text-gray-300 mr-2 " />
             </MenuButton>
+
             <MenuList px={2}>
               {!notification?.length && "No New Messages"}
               {notification?.map((notif) => (
@@ -192,9 +193,9 @@ const SideDrawer = () => {
           <Menu>
             <ProfileModal>
               <Tooltip label="Profile" hasArrow>
-                <MenuItem>
+                <MenuItem background={"transparent"}>
                   <Avatar
-                    className="active:bg-transparent hover:scale-150 scale-125"
+                    className="bg-transparent hover:scale-150 scale-125"
                     _hover={{ transitionDuration: "0.33s" }}
                     size="sm"
                     cursor="pointer"
@@ -204,13 +205,6 @@ const SideDrawer = () => {
                 </MenuItem>
               </Tooltip>
             </ProfileModal>
-
-            {/* <MenuItem onClick={()=>{
-                localStorage.removeItem("userinfo");
-                navigate("/");
-              }}
-              marginRight={0}
-              w={100}>Logout</MenuItem> */}
           </Menu>
         </div>
       </Box>
@@ -224,31 +218,33 @@ const SideDrawer = () => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader>Search Users</DrawerHeader>
-          <DrawerBody>
-            <Box display="flex" justifyContent="space-between" gap={2}>
-              <Input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Enter Name or Email"
-              />
-              <Button onClick={handleSearch}>Go</Button>
-            </Box>
-            {loading ? (
-              <ChatLoading />
-            ) : (
-              searchResult.map((user) => {
-                return (
-                  <UserListItem
-                    key={user._id}
-                    user={user}
-                    handleFunction={() => accessChat(user._id)}
-                  />
-                );
-              })
-            )}
-            {loadingChat && <Spinner ml="auto" display="flex" />}
-          </DrawerBody>
+          <div className=" w-full h-full bg-purple-100/20   shadow-black shadow-2xl">
+            <DrawerHeader>Search Users</DrawerHeader>
+            <DrawerBody>
+              <Box display="flex" justifyContent="space-between" gap={2}>
+                <Input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Enter Name or Email"
+                />
+                <Button onClick={handleSearch}>Go</Button>
+              </Box>
+              {loading ? (
+                <ChatLoading />
+              ) : (
+                searchResult.map((user) => {
+                  return (
+                    <UserListItem
+                      key={user._id}
+                      user={user}
+                      handleFunction={() => accessChat(user._id)}
+                    />
+                  );
+                })
+              )}
+              {loadingChat && <Spinner ml="auto" display="flex" />}
+            </DrawerBody>
+          </div>
         </DrawerContent>
       </Drawer>
     </div>

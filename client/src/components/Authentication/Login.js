@@ -1,11 +1,13 @@
 import {Button} from "@chakra-ui/button"
 import React, { useState } from 'react'
-import {FormControl, FormLabel, Input, InputGroup, InputRightElement, VStack} from "@chakra-ui/react";
+import {FormControl, FormLabel, Input, InputGroup, InputRightElement, VStack, background} from "@chakra-ui/react";
 import { Icon, useToast } from '@chakra-ui/react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BaseUrl } from "../../config/Baseurl";
+
+
 const Login = () => {
   const [show,setShow]=useState(false);
   const [email,setEmail]=useState();
@@ -86,19 +88,19 @@ const Login = () => {
       }
   }
   return (
-    <VStack spacing="8px" fontFamily={'Palanquin'}>
+    <VStack color={"purple.600"} spacing="8px" fontFamily={'Roboto'} className="font-medium ">
 
-    <FormControl className='border-gray-700 border-hidden'  id='email' isRequired>
-     <FormLabel>Email</FormLabel>
-     <Input value={email} placeholder='Enter Your Email' onChange={(e)=>setEmail(e.target.value)}/>
+    <FormControl className='border-purple-700/40 border-hidden' id='email' isRequired>
+     <FormLabel color={"purple.470"} fontWeight={"semibold"}>Email</FormLabel>
+     <Input  color={"purple.400"} value={email} placeholder='chatmania@example.com' onChange={(e)=>setEmail(e.target.value)}/>
     </FormControl>
 
     <FormControl   id='password' isRequired>
-     <FormLabel>Password</FormLabel>
-     <InputGroup className='border-gray-700 border-hidden'>
-     <Input value={password} type={show?"text":"password"} placeholder='Enter Your Password' onChange={(e)=>setPassword(e.target.value)}/>
+     <FormLabel fontWeight={"semibold"}>Password</FormLabel>
+     <InputGroup className='border-purple-700/40 border-hidden'>
+     <Input value={password} type={show?"text":"password"} color={"purple.400"} placeholder='Password' onChange={(e)=>setPassword(e.target.value)}/>
      <InputRightElement width="4.5rem">
-      <Button colorScheme="black" h="1.75rem" size="lg" onClick={handleclick}>
+      <Button _hover={{background:"transparent"}} background={"transparent"} color={"purple.700"} h="1.75rem" size="lg" onClick={handleclick}>
       {show? <Icon as={FaEye}/> : <Icon as={FaEyeSlash}/>}
       </Button>
      </InputRightElement>
@@ -106,7 +108,7 @@ const Login = () => {
     </FormControl>
 
 
-    <button className="w-full bg-purple-500 hover:bg-purple-400 transition rounded-lg py-2.5 font-farro font-medium mt-5" onClick={submitHandler} isLoading={loading}>
+    <button className="w-full bg-purple-500 hover:bg-purple-400 transition rounded-lg py-2.5 font-medium mt-5 text-white" onClick={submitHandler} isLoading={loading}>
       Login
     </button>
     {/* <Button
@@ -117,7 +119,7 @@ const Login = () => {
       isLoading={loading}
     >Login</Button> */}
     
-    <button className="w-full bg-white/10 hover:bg-white/15 transition py-2.5 rounded-lg" onClick={()=> {
+    <button className="w-full bg-[#bf74f7]/30 hover:bg-[#bf74f7]/15 transition py-2.5 rounded-lg" onClick={()=> {
       setEmail("guest@example.com");
       setPassword("123456");
     }}>

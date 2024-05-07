@@ -21,6 +21,7 @@ import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/ChatLogic";
 import GroupChatModal from "../Group_chatpage/GroupChatModal";
 import { BaseUrl } from "../config/Baseurl";
+
 const MyChats = ({ fetchAgain }) => {
   const { user, selectedChat, setSelectedChat, chats, setChats } =
     ContextState();
@@ -56,16 +57,17 @@ const MyChats = ({ fetchAgain }) => {
 
   return (
     <Box
-      className=" bg-black bg-opacity-50 backdrop-blur-2xl text-white shadow-lg "
+      className=" bg-white text-black shadow-xl z-20 shadow-black "
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDir="column"
       alignItems="center"
       p={4}
-      w={{ base: "100%", md: "31%" }}
-      borderRadius="2xl"
+      w={{ base: "100%", md: "32%" }}
+      // borderRadius={{base:"2xl", md:"none"}}
+
     >
       <Tabs variant="enclosed" className="w-full h-full overflow-hidden ">
-        <TabList mb="1em">
+        <TabList mb="1em" >
           <Tab
             fontFamily={"Palanquin"}
             color={"purple.200"}
@@ -76,6 +78,8 @@ const MyChats = ({ fetchAgain }) => {
               fontWeight: "bold",
             }}
             width={"50%"}
+            py={3}
+          
           >
             My Chats
           </Tab>
@@ -89,6 +93,7 @@ const MyChats = ({ fetchAgain }) => {
               fontWeight: "bold",
             }}
             width={"50%"}
+            py={3}
           >
             Voice Calls
           </Tab>
@@ -124,7 +129,7 @@ const MyChats = ({ fetchAgain }) => {
               display="flex"
               flexDir="column"
               width="100%"
-              borderRadius="xl"
+              // borderRadius="xl"
               overflow="hidden"
             >
               {chats ? (
@@ -144,15 +149,16 @@ const MyChats = ({ fetchAgain }) => {
                             }
                       }
                       color={selectedChat == chat ? "gray.200" : "gray.200"}
-                      bgImage={
+                      bgColor={
                         selectedChat == chat
-                          ? "linear-gradient(rgba(191, 116, 247, 0.5),rgba(191, 116, 247, 0.4))"
-                          : "linear-gradient(rgba(255, 255, 255, 0.1),rgba(255, 255, 255, 0.2))"
+                          ? "#a336f5"
+                          : "#bf74f7"
                       }
                       fontSize="x-large"
                       px={5}
                       py={3}
-                      borderRadius="xl"
+                      pb={4}
+                      borderRadius={{base:"2xl", md:"xl"}}
                       key={chat._id}
                     >
                       <div className="flex flex-col">
@@ -179,6 +185,7 @@ const MyChats = ({ fetchAgain }) => {
               )}
             </Box>
           </TabPanel>
+
         </TabPanels>
       </Tabs>
     </Box>

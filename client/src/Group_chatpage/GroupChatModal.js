@@ -78,52 +78,56 @@ const GroupChatModal = ({ children }) => {
   };
 
   const handleSubmit = async () => {
-  if(!groupChatName || !selectedUsers){
-    toast({
-      title: "Please fill all the fields",
-      status: "warning",
-      isClosable: true,
-      position: "top",      
-    });
-  }
-  try {
-   setLoading(true);
-   const config={
-    headers:{
-      "Content-type":"application/json",
-      "Authorization":`Bearer ${user.token}`
+    if (!groupChatName || !selectedUsers) {
+      toast({
+        title: "Please fill all the fields",
+        status: "warning",
+        isClosable: true,
+        position: "top",
+      });
     }
-   }
-   
-   const {data}= await axios.post(`${BaseUrl}chat/group`,{
-      users:JSON.stringify(selectedUsers.map((u)=>u._id)),name:groupChatName,
-   },config);
-   setLoading(false);
-   console.log(data);
-   setChats([data,...chats]);
-   onclose();
-   toast({
-    title:"New Group Chat Created",
-    status:"Success",
-    duration:4000,
-    isClosable:true,
-    position:"top-right"
-  })   
-  } catch (error) {
-    toast({
-      title:"Error occored!",
-      description:"Failed to Create group chat",
-      status:"error",
-      duration:4000,
-      isClosable:true,
-      position:"top-right"
-    });
-    setLoading(false);
-  }
+    try {
+      setLoading(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
 
+      const { data } = await axios.post(
+        `${BaseUrl}chat/group`,
+        {
+          users: JSON.stringify(selectedUsers.map((u) => u._id)),
+          name: groupChatName,
+        },
+        config
+      );
+      setLoading(false);
+      console.log(data);
+      setChats([data, ...chats]);
+      onclose();
+      toast({
+        title: "New Group Chat Created",
+        status: "Success",
+        duration: 4000,
+        isClosable: true,
+        position: "top-right",
+      });
+    } catch (error) {
+      toast({
+        title: "Error occored!",
+        description: "Failed to Create group chat",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+        position: "top-right",
+      });
+      setLoading(false);
+    }
   };
   const handleRemove = (user) => {
-   setSelectedUsers(selectedUsers.filter((id)=>id!=user));
+    setSelectedUsers(selectedUsers.filter((id) => id != user));
   };
 
   return (
@@ -131,66 +135,79 @@ const GroupChatModal = ({ children }) => {
       <Button onClick={onOpen}>{children}</Button>
       <Modal isOpen={isOpen} onClose={onClose} isCentered height="30%">
         <ModalOverlay />
-        <ModalContent className="mx-5 rounded-xl" >
-          <ModalHeader
-          className="font-pal"
-            fontSize="35px"
-            display="flex"
-            justifyContent="center"
-          >
-            Create Group
-          </ModalHeader>
-          <ModalCloseButton />
-          <ModalBody display="flex" flexDir="column" alignItems="center"  fontFamily={"Palanquin"}>
-            <FormControl>
-              <Input
-                placeholder="Group Name"
-                mb={3}
-                onChange={(e) => setGroupChatName(e.target.value)}
-              />
-            </FormControl>
-            <FormControl>
-              <Input
-                placeholder="Search Users"
-                value={search}
-                mb={3}
-                onChange={(e) => handleSearch(e.target.value)}
-              />
-            </FormControl>
-
-            {/* showing selected users */}
-            <Box
-            display="flex"
-            width="95%"
-            flexWrap="wrap"
-            alignItems="center"
+        <ModalContent background={"transparent"}>
+          <div className="flex flex-col p-6 bg-white w-full h-full rounded-2xl text-black shadow-lg">
+            <ModalHeader
+              className="font-pal"
+              fontSize="35px"
+              display="flex"
+              justifyContent="center"
             >
-              {selectedUsers.map((user) => (
-                <UserBadgeItem user={user} handleRemove={()=>handleRemove(user)} />
-              ))}
-            </Box>
+              Create Group
+            </ModalHeader>
+            <ModalCloseButton />
+            <ModalBody
+              display="flex"
+              flexDir="column"
+              alignItems="center"
+              fontFamily={"Palanquin"}
+            >
+              <FormControl>
+                <Input
+                  placeholder="Group Name"
+                  mb={3}
+                  onChange={(e) => setGroupChatName(e.target.value)}
+                />
+              </FormControl>
+              <FormControl>
+                <Input
+                  placeholder="Search Users"
+                  value={search}
+                  mb={3}
+                  onChange={(e) => handleSearch(e.target.value)}
+                />
+              </FormControl>
 
-            {/* search user and select */}
-            {loading ? (
-              <Spinner ml="auto" display="flex" />
-            ) : (
-              searchResult
-                .slice(0, 4)
-                .map((user) => (
-                  <UserListItem
+              {/* showing selected users */}
+              <Box
+                display="flex"
+                width="95%"
+                flexWrap="wrap"
+                alignItems="center"
+              >
+                {selectedUsers.map((user) => (
+                  <UserBadgeItem
                     user={user}
-                    handleFunction={() => handleGroup(user)}
+                    handleRemove={() => handleRemove(user)}
                   />
-                ))
-            )}
-          </ModalBody>
+                ))}
+              </Box>
 
-          <ModalFooter >
-            <button style={{transitionDuration:"0.33s"}} className="hover:bg-purple-200 bg-purple-300 px-3 py-1 rounded-md font-pal font-semibold" onClick={handleSubmit}>
-              Create
-            </button>
-            
-          </ModalFooter>
+              {/* search user and select */}
+              {loading ? (
+                <Spinner ml="auto" display="flex" />
+              ) : (
+                searchResult
+                  .slice(0, 4)
+                  .map((user) => (
+                    <UserListItem
+                      user={user}
+                      handleFunction={() => handleGroup(user)}
+                    />
+                  ))
+              )}
+            </ModalBody>
+
+            <ModalFooter>
+              <button
+                style={{ transitionDuration: "0.33s" }}
+                className="hover:bg-purple-300 bg-purple-500 px-3 py-1 rounded-md font-pal font-semibold text-white"
+                onClick={handleSubmit}
+              >
+                Create
+              </button>
+            </ModalFooter>
+          </div>
         </ModalContent>
       </Modal>
     </>

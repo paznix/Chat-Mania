@@ -190,7 +190,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
               background={"transparent"}
-              color={"white"}
+              _hover={{background:"transparent"}}
+              color={"black"}
               size={"2px"}
             />
             {messages &&
@@ -209,14 +210,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </Text>
 
           <Box
-            className="bg-gray-500 bg-opacity-25 text-white shadow-lg"
+            className="bg-purple-100 text-white shadow-lg"
             display="flex"
             flexDir="column"
             justifyContent="flex-end"
             p={3}
+        
             width="100%"
             height="100%"
-            borderRadius="lg"
+            borderRadius="2xl"
             overflow="hidden"
           >
             {/* messages here */}

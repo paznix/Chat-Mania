@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Tilt+Neon&family=Work+Sans:wght@300&display=swap');
+
 
 .App{
     min-height: 100vh;
     display: flex;
-    background-image: url("./background.jpg");    
+    background-image: url("./background.jpg");  
     background-position: center;
     background-repeat: no-repeat;
 }
@@ -19,5 +19,16 @@ background-color: rgba(136,136,136,0.281);
   ::-webkit-scrollbar-thumb:hover{
     background:#555; 
       }
+
+::-webkit-file-upload-button{
+  
+  background-color: #c7b7ec77;
+  border-radius: 5px;
+    color: #7553c5;
+    border: none;
+    box-shadow: #a855f7;
+    margin-right: 12px;
+    
+}
   
   

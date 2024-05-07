@@ -3,6 +3,7 @@ import axios from "axios";
 import {
   Box,
   Container,
+  Img,
   Tab,
   TabList,
   TabPanel,
@@ -13,9 +14,11 @@ import {
 } from "@chakra-ui/react";
 
 import Signup from "../components/Authentication/Signup";
-import Login from "../components/Authentication/Login"
+import Login from "../components/Authentication/Login";
 import { useNavigate } from "react-router-dom";
 import { easeIn } from "framer-motion";
+import Logo from "../logo.png";
+
 const Home = () => {
   // const [name, setname] = useState();
   // const getdata = async () => {
@@ -27,58 +30,90 @@ const Home = () => {
   // useEffect(() => {
   //   getdata();
   // }, []);
-  
-  const navigate=useNavigate();
-  useEffect(()=>{
-     const user=JSON.parse(localStorage.getItem("userInfo"));
-     if(user){
-      navigate("/chat");
-     }
 
-  },[navigate]);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userInfo"));
+    if (user) {
+      navigate("/chat");
+    }
+  }, [navigate]);
 
   return (
-    <Container className="align-center justify-center" maxW="xl" centerContent>
-      <Box
-      className=" bg-black bg-opacity-50 backdrop-blur-2xl shadow-lg"
-        display="flex"
-        justifyContent="center"
-        p={3}
-
-        w="100%"
-        m="40px 0 15px 0"
-        borderRadius="2xl"
-
+    <div className=" bg-purple-100 md:bg-purple-100/75 backdrop-blur-3xl w-full text-black "
+    >
+      <Container
+        className="bg-white backdrop-blur-2xl"
+        centerContent
       >
-        <div className="text-white pt-2">
-        <h2 className='relative select-none text-purple-500 md:py-2 py-3 md:text-4xl text-3xl font-bold italic font-farro'>CHAT MANIA</h2>
-        <h2 className='absolute select-none top-4  md:py-2 py-3 md:text-4xl text-3xl font-bold italic font-farro'>CHAT MANIA</h2>
-        </div>
-        
-      </Box>
+        <Box
+        className=" md:bg-purple-100/70 backdrop-blur-xl md:shadow-lg w-full "
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          p={3}
+          borderRadius="2xl"
+          position={"absolute"}
+          top={{base:16, md:20}}
+          
+        >
+          <div className=" text-[#793add]  flex items-center justify-center w-full pr-3 gap-2 " fontFamily={"Roboto"} >
+            <img src={Logo} className="w-24 h-24" />
+            <h3 className="text-3xl pt-1 font-bold italic">CHAT MANIA</h3>
+          </div>
+        </Box>
 
-      
-      <Box
-      className=" bg-black bg-opacity-50 backdrop-blur-2xl text-white shadow-lg "
-       w="100%" p={4} borderRadius="2xl" >
-        <Tabs variant="enclosed">
-          <TabList  mb="1em">
-            <Tab fontFamily={'Farro'} color={"purple.200"} _selected={{color:'purple.400', border:'1px', bgColor:'purple.100', fontWeight:'bold'}} width={"50%"}>Login</Tab>
-            <Tab fontFamily={'Farro'} color={"purple.200"} _selected={{color:'purple.400', border:'1px', bgColor:'purple.100', fontWeight:'bold'}} width={"50%"}>Sign Up</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel>
-              <Login/>
-            </TabPanel>
-            <TabPanel>
-              <Signup/>
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
-      </Box>
-      
-      
-    </Container>
+        <Box
+        className="md:bg-purple-100/70 backdrop-blur-xl md:shadow-lg w-full "
+          position={"absolute"}
+          top={{base:250, md:250}}
+          
+          w="100%"
+          p={4}
+          borderRadius="2xl"
+
+        >
+          <Tabs variant="enclosed">
+            <TabList mb="1em">
+              <Tab
+                fontFamily={"Farro"}
+                color={"purple.300"}
+                _selected={{
+                  color: "purple.400",
+                  border: "1px",
+                  bgColor: "purple.100",
+                  fontWeight: "bold",
+                }}
+                width={"50%"}
+              >
+                Login
+              </Tab>
+              <Tab
+                fontFamily={"Farro"}
+                color={"purple.300"}
+                _selected={{
+                  color: "purple.400",
+                  border: "1px",
+                  bgColor: "purple.100",
+                  fontWeight: "bold",
+                }}
+                width={"50%"}
+              >
+                Sign Up
+              </Tab>
+            </TabList>
+            <TabPanels>
+              <TabPanel>
+                <Login />
+              </TabPanel>
+              <TabPanel>
+                <Signup />
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </Box>
+      </Container>
+    </div>
   );
 };
 

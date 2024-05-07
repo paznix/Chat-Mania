@@ -6,13 +6,14 @@ const ChatBox = ({fetchAgain,setFetchAgain}) => {
   const {selectedChat}=ContextState();
   return (
     <Box
-    className=" font-pal bg-black bg-opacity-50 backdrop-blur-2xl text-white shadow-lg"
+    className=" font-pal bg-white text-black shadow-lg"
     display={{base:selectedChat ? "flex" : "none",md:"flex"}}
     alignItems="center"
     flexDir="column"
     p={3}
+    px={5}
     width={{base:"100%",md:"68%"}}
-    borderRadius="xl"
+    // borderRadius={{base: "2xl", md:"none"}}
 
     
     >
