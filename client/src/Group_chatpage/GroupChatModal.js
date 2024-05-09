@@ -138,7 +138,7 @@ const GroupChatModal = ({ children }) => {
         <ModalContent background={"transparent"}>
           <div className="flex flex-col p-6 bg-white w-full h-full rounded-2xl text-black shadow-lg">
             <ModalHeader
-              className="font-pal"
+              fontFamily={"Roboto"}
               fontSize="35px"
               display="flex"
               justifyContent="center"
@@ -150,7 +150,7 @@ const GroupChatModal = ({ children }) => {
               display="flex"
               flexDir="column"
               alignItems="center"
-              fontFamily={"Palanquin"}
+              fontFamily={"Roboto"}
             >
               <FormControl>
                 <Input
@@ -201,7 +201,7 @@ const GroupChatModal = ({ children }) => {
             <ModalFooter>
               <button
                 style={{ transitionDuration: "0.33s" }}
-                className="hover:bg-purple-300 bg-purple-500 px-3 py-1 rounded-md font-pal font-semibold text-white"
+                className="hover:bg-purple-300 bg-purple-500 px-3 py-1 rounded-md font-semibold text-white"
                 onClick={handleSubmit}
               >
                 Create

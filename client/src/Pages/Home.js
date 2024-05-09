@@ -47,7 +47,7 @@ const Home = () => {
         centerContent
       >
         <Box
-        className=" md:bg-purple-100/70 backdrop-blur-xl md:shadow-lg w-full "
+        className=" md:bg-purple-100 backdrop-blur-xl md:shadow-lg w-full "
           display="flex"
           flexDirection="column"
           justifyContent="center"
@@ -64,7 +64,7 @@ const Home = () => {
         </Box>
 
         <Box
-        className="md:bg-purple-100/70 backdrop-blur-xl md:shadow-lg w-full "
+        className="md:bg-purple-100 backdrop-blur-xl md:shadow-lg w-full"
           position={"absolute"}
           top={{base:250, md:250}}
           
@@ -74,7 +74,7 @@ const Home = () => {
 
         >
           <Tabs variant="enclosed">
-            <TabList mb="1em">
+            <TabList my="1em" >
               <Tab
                 fontFamily={"Farro"}
                 color={"purple.300"}

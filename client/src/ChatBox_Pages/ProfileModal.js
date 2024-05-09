@@ -44,7 +44,7 @@ const ProfileModal = ({ children }) => {
           
             <ModalHeader
               fontSize="40px"
-              fontFamily="Palanquin"
+              fontFamily="Roboto"
               display="flex"
               justifyContent="space-around"
             >
@@ -66,7 +66,7 @@ const ProfileModal = ({ children }) => {
 
               <Text
                 fontSize={{ base: "20px", md: "30px" }}
-                fontFamily="Palanquin"
+                fontFamily="Roboto"
               >
                 {user.email}
               </Text>

@@ -3,12 +3,15 @@ import { ContextState } from "../Context/ChatProvider";
 import {
   Box,
   Button,
+  Center,
   FormControl,
   IconButton,
   Input,
   Spinner,
   Text,
   useToast,
+  Divider,
+  FormLabel,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/ChatLogic";
@@ -20,9 +23,12 @@ import "../style.css";
 import ScrollableChat from "./UsersSideDrawer/ScrollableChat";
 import animationData from "../animations/typing.json";
 import Lottie from "react-lottie";
+import { IoSend } from "react-icons/io5";
+import { ImAttachment } from "react-icons/im";
 
 //socket code start
 import io from "socket.io-client";
+import { px } from "framer-motion";
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 //socket code end
@@ -82,7 +88,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   const sendMessage = async (event) => {
-    if (event.key === "Enter" && newmessages) {
+    if ((event.key === "Enter" || event.type === "click") && newmessages) {
       socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
@@ -111,6 +117,56 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         console.log(error);
       }
     }
+  };
+
+  const buttonSend = async (event) => {
+    if (newmessages) {
+      socket.emit("stop typing", selectedChat._id);
+      try {
+        const config = {
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        };
+        setNewMessages("");
+        const { data } = await axios.post(
+          `${BaseUrl}messages`,
+          { chatId: selectedChat, content: newmessages },
+          config
+        );
+        socket.emit("new message", data);
+        setMessages([...messages, data]);
+      } catch (error) {
+        toast({
+          title: "Error Occuredd!",
+          description: "Failed to send the message.",
+          status: "error",
+          duration: 4000,
+          isClosable: true,
+          position: "top-right",
+        });
+        console.log(error);
+      }
+    }
+  };
+
+  const handleSend = async () => {
+    await buttonSend();
+  };
+
+  const fileUpload = require("socketio-file-upload");
+
+  const sendFile = async (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const base64String = e.target.result.split(",")[1]; //remove data uri prefix
+      socket.emit("file-upload", { name: file.name, data: base64String });
+    };
+
+    reader.readAsDataURL(file);
   };
 
   useEffect(() => {
@@ -176,7 +232,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         <>
           <Text
             className="font-medium"
-            fontFamily="Palanquin"
+            fontFamily="Roboto"
             fontSize={{ base: "28px", md: "30px" }}
             pb={3}
             px={2}
@@ -184,14 +240,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             display="flex"
             justifyContent={{ base: "space-between" }}
             alignItems="center"
+            color={"purple.700"}
           >
             <IconButton
               display={{ base: "flex", md: "none" }}
               icon={<ArrowBackIcon />}
               onClick={() => setSelectedChat("")}
               background={"transparent"}
-              _hover={{background:"transparent"}}
-              color={"black"}
+              _hover={{ background: "transparent" }}
+              color={"purple.700"}
               size={"2px"}
             />
             {messages &&
@@ -210,16 +267,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </Text>
 
           <Box
-            className="bg-purple-100 text-white shadow-lg"
+            className="bg-purple-100/25 outline-purple-300/10 outline text-white shadow-xl"
             display="flex"
-            flexDir="column"
+            flexDir="column "
             justifyContent="flex-end"
             p={3}
-        
             width="100%"
             height="100%"
             borderRadius="2xl"
             overflow="hidden"
+            fontFamily={"roboto"}
           >
             {/* messages here */}
             {loading ? (
@@ -229,35 +286,76 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 h={20}
                 alignSelf="center"
                 margin="auto"
+                color="purple.700"
               />
             ) : (
               <div className="messages">
                 <ScrollableChat messages={messages} />
-              </div>
-            )}
-            <FormControl isRequired mt={3} onKeyDown={sendMessage}>
-              {/* onKeyDown is used when we click enter this run */}
-              {istyping ? (
-                <div>
+                {istyping ? (
                   <Lottie
                     options={defaultOptions}
-                    // height={50}
-                    width={70}
-                    style={{ marginBottom: 15, marginLeft: 0 }}
+                    height={250}
+                    width={100}
+                    style={{ marginBottom: 0, marginLeft: 12,marginTop:10, background:"transparent" }}
                   />
+                ) : (
+                  <></>
+                )}
+              </div>
+            )}
+
+            <Box
+              display={"flex"}
+              alignItems={"end"}
+              justifyItems="space-between"
+              gap={2}
+              mt={3}
+              flexDir={"row"}
+              className="drop-shadow-xl"
+            >
+              <FormControl isRequired onKeyDown={sendMessage}>
+                {/* onKeyDown is used when we click enter this run */}
+
+                <div className="flex bg-purple-100 rounded-xl text-purple-950">
+                  <Input
+                    borderRadius={12}
+                    pl={6}
+                    placeholder="Type your message here..."
+                    value={newmessages}
+                    onChange={typingHandler}
+                    _hover={{ outline: "none" }}
+                    _focus={{ outline: "none", border: "none" }}
+                  />
+                  <div className="bg-transparent flex justify-center items-center l z-10">
+                    <FormControl>
+                      <FormLabel
+                        type="button"
+                        className="text-2xl text-purple-400 scale-125 hover:scale-150 ease-in-out px-0.5 mt-2 ml-3 duration-200  hover:cursor-pointer"
+                        cente
+                      >
+                        <Input
+                          type="file"
+                          className="hidden"
+                          onChange={sendFile}
+                        />
+                        <ImAttachment />
+                      </FormLabel>
+                    </FormControl>
+                  </div>
                 </div>
-              ) : (
-                <></>
-              )}
-              <Input
-                borderRadius={8}
-                pl={6}
-                pb={1}
-                placeholder="Enter a message"
-                value={newmessages}
-                onChange={typingHandler}
-              />
-            </FormControl>
+              </FormControl>
+
+              <div className="bg-purple-600 rounded-xl flex justify-center items-center h-full shadow-xl">
+                <button
+                  className="text-2xl text-white -rotate-45 hover:scale-110 ease-in-out px-1.5 pb-2 duration-200 ml-3"
+                  borderRadius={"xl"}
+                  cursor={"pointer"}
+                  onClick={handleSend}
+                >
+                  <IoSend />
+                </button>
+              </div>
+            </Box>
           </Box>
         </>
       ) : (
@@ -267,7 +365,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           justifyContent="center"
           h="100%"
         >
-          <Text fontSize="3xl" pb={3} fontFamily="Palanquin">
+          <Text fontSize="3xl" pb={3} fontFamily="Roboto" color={"purple.700"}>
             Click on a User to start Chatting
           </Text>
         </Box>

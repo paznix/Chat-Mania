@@ -127,8 +127,7 @@ const SideDrawer = () => {
   return (
     <div>
       <Box
-        fontFamily="Palanquin"
-        className=" bg-[#10001c] backdrop-blur-2xl text-black shadow-xl "
+        className=" bg-purple-100/70 backdrop-blur-2xl shadow-xl text-purple-700"
         display="flex"
         flexDirection="row"
         justifyContent="space-between"
@@ -143,10 +142,9 @@ const SideDrawer = () => {
           placeContent="bottom-end"
         >
           <Button
-            color={"white"}
-            _hover={{ background: "transparent" }}
+            _hover={{ background: "transparent" , color: "purple.400" }}
             background={"transparent"}
-            className="bg-white/20 bg-opacity-10 text-white hover:text-gray-400"
+            color={"purple.700"}
             onClick={onOpen}
           >
             <i class="fa-solid fa-search "></i>
@@ -155,19 +153,24 @@ const SideDrawer = () => {
             </Text>
           </Button>
         </Tooltip>
-        <div className="text-white pt-2 font-farro flex items-center justify-center w-full gap-3 mb-2 ml-14 md:ml-0">
-          <img src={Logo} className="w-16 h-16" />
-          <h3 className="text-3xl pt-1 hidden md:block">Chat Mania</h3>
+        <div
+          className=" text-[#793add]  flex items-center justify-center w-full md:pr-3 md:pl-0 pl-12 gap-2 "
+          fontFamily={"Roboto"}
+        >
+          <img src={Logo} className="w-20 h-20 md:scale-100" />
+          <h3 className="md:block hidden text-3xl pt-1 font-bold italic">
+            CHAT MANIA
+          </h3>
         </div>
 
         <div className="flex justify-center md:justify-between text-slate-600">
           <Menu>
-            <MenuButton p={1} mr={{base:"2", md:"5"}}>
+            <MenuButton p={1} mr={{ base: "2", md: "5" }}>
               <NotificationBadge
                 count={notification?.length}
                 effect={Effect.SCALE}
               />
-              <IoIosNotifications className="text-2xl text-gray-300 mr-2 " />
+              <IoIosNotifications className="text-2xl text-purple-700 mr-2 " />
             </MenuButton>
 
             <MenuList px={2}>
@@ -196,7 +199,10 @@ const SideDrawer = () => {
                 <MenuItem background={"transparent"}>
                   <Avatar
                     className="bg-transparent hover:scale-150 scale-125"
-                    _hover={{ transitionDuration: "0.33s" }}
+                    _hover={{
+                      transitionDuration: "0.33s",
+                      transitionTimingFunction: "ease-in-out",
+                    }}
                     size="sm"
                     cursor="pointer"
                     name={user.name}
@@ -218,7 +224,7 @@ const SideDrawer = () => {
       >
         <DrawerOverlay />
         <DrawerContent>
-          <div className=" w-full h-full bg-purple-100/20   shadow-black shadow-2xl">
+          <div className=" w-full h-full bg-purple-100/25  shadow-black shadow-2xl">
             <DrawerHeader>Search Users</DrawerHeader>
             <DrawerBody>
               <Box display="flex" justifyContent="space-between" gap={2}>

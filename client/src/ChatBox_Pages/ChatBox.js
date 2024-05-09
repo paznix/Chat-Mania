@@ -6,7 +6,7 @@ const ChatBox = ({fetchAgain,setFetchAgain}) => {
   const {selectedChat}=ContextState();
   return (
     <Box
-    className=" font-pal bg-white text-black shadow-lg"
+    className=" font-pal bg-purple-100/30 text-black shadow-lg"
     display={{base:selectedChat ? "flex" : "none",md:"flex"}}
     alignItems="center"
     flexDir="column"

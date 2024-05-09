@@ -169,4 +169,18 @@ io.on("connection", (socket) => {
       to,
     });
   });
+
+
+  //typing
+  socket.on('typing' , (room) => socket.in(room).emit("typing"));
+  socket.on('stop typing' , (room) => socket.in(room).emit("stop typing"));
+
+  // handle file input
+  socket.on("file-upload", (data) => {
+    const buffer = Buffer.from(data.data, 'base64');
+    // Save the file using fs or a database (implement logic here)
+    console.log(`Received file: ${data.name}`);
+    
+  });
+  
 });

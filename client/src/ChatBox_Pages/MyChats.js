@@ -57,19 +57,18 @@ const MyChats = ({ fetchAgain }) => {
 
   return (
     <Box
-      className=" bg-white text-black shadow-xl z-20 shadow-black "
+      className=" md:bg-purple-100/20 text-black shadow-xl z-20 shadow-purple-900/35 "
       display={{ base: selectedChat ? "none" : "flex", md: "flex" }}
       flexDir="column"
       alignItems="center"
       p={4}
       w={{ base: "100%", md: "32%" }}
       // borderRadius={{base:"2xl", md:"none"}}
-
     >
       <Tabs variant="enclosed" className="w-full h-full overflow-hidden ">
-        <TabList mb="1em" >
+        <TabList>
           <Tab
-            fontFamily={"Palanquin"}
+            fontFamily={"Roboto"}
             color={"purple.200"}
             _selected={{
               color: "purple.400",
@@ -79,12 +78,11 @@ const MyChats = ({ fetchAgain }) => {
             }}
             width={"50%"}
             py={3}
-          
           >
             My Chats
           </Tab>
           <Tab
-            fontFamily={"Palanquin"}
+            fontFamily={"Roboto"}
             color={"purple.200"}
             _selected={{
               color: "purple.400",
@@ -101,30 +99,30 @@ const MyChats = ({ fetchAgain }) => {
         <TabPanels>
           <TabPanel>
             <Box
-              className="hidden md:flex"
-              pb={7}
-              fontSize={{ base: "28px", md: "22px" }}
-              fontFamily="Palanquin"
+              pb={4}
+              fontFamily="Roboto"
               width="100%"
               justifyContent="start"
               alignItems="center"
               fontWeight="bold"
+              background={"transparent"}
             >
               {/* if we want to display modal on click with the button then wrap the button with the component which is going to visible on click */}
-              <GroupChatModal>
-                <button className="flex gap-3 justify-between items-center pb-2 px-2 py-1 mt-1 rounded-md">
-                  Create Group <AddIcon />
-                </button>
-              </GroupChatModal>
+              <Box className=" flex absolute bottom-3 right-3 z-10 shadow-md rounded-xl">
+                <GroupChatModal
+                >
+                  <Button
+                    className="flex  gap-3 justify-between items-center"
+                    _hover={{ background: "transparent", color: "purple.400" }}
+                    background={"transparent"}
+                    color={"purple.700"}
+                  >
+                    Create Group <AddIcon />
+                  </Button>
+                </GroupChatModal>
+              </Box>
             </Box>
-            <div className="flex md:hidden absolute bottom-3 right-3 z-10 shadow-lg">
-              {/* if we want to display modal on click with the button then wrap the button with the component which is going to visible on click */}
-              <GroupChatModal>
-                <button className="flex gap-3 justify-between items-center">
-                Create Group <AddIcon />
-                </button>
-              </GroupChatModal>
-            </div>
+
             <Box
               display="flex"
               flexDir="column"
@@ -136,7 +134,7 @@ const MyChats = ({ fetchAgain }) => {
                 <Box overflowY="scroll">
                   {chats.map((chat) => (
                     <Box
-                      my={2}
+                      mb={3}
                       className="shadow-md transition flex items-center justify-start gap-5"
                       onClick={() => setSelectedChat(chat)}
                       cursor="pointer"
@@ -144,21 +142,20 @@ const MyChats = ({ fetchAgain }) => {
                         selectedChat == chat
                           ? ""
                           : {
-                              background:
-                                "linear-gradient(rgba(191,116,247,0.3), rgba(191,161,247,0.3))",
+                              backgroundColor: "#bf74f7",
+                              textColor: "white",
+                              transitionDuration: "0.3s",
+                              transitionTimingFunction: "ease-in-out",
                             }
                       }
                       color={selectedChat == chat ? "gray.200" : "gray.200"}
-                      bgColor={
-                        selectedChat == chat
-                          ? "#a336f5"
-                          : "#bf74f7"
-                      }
+                      bgColor={selectedChat == chat ? "#a336f5" : "#c7b7ec77"}
+                      textColor={selectedChat == chat ? "white" : "purple.700"}
                       fontSize="x-large"
                       px={5}
-                      py={3}
-                      pb={4}
-                      borderRadius={{base:"2xl", md:"xl"}}
+                      py={2}
+                      pb={3}
+                      borderRadius={{ base: "2xl", md: "xl" }}
                       key={chat._id}
                     >
                       <div className="flex flex-col">
@@ -185,7 +182,6 @@ const MyChats = ({ fetchAgain }) => {
               )}
             </Box>
           </TabPanel>
-
         </TabPanels>
       </Tabs>
     </Box>
