@@ -1,0 +1,20 @@
+const jwt = require('jsonwebtoken')
+const UserModel = require('../models/userModel')
+
+const getUserDetailsFromToken = async(token)=>{
+    
+    if(!token){
+        return {
+            message : "session out",
+            logout : true,
+        }
+    }
+
+    const decode = await jwt.verify(token, process.env.token)
+
+    const user = await UserModel.findById(decode.id).select('-password')
+
+    return user
+}
+
+module.exports = getUserDetailsFromToken;

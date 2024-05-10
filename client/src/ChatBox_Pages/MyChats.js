@@ -1,11 +1,8 @@
 import {
   Box,
   Button,
-  Flex,
-  Stack,
   useToast,
   Text,
-  Tooltip,
   Image,
   TabList,
   Tabs,
@@ -18,9 +15,11 @@ import React, { useEffect, useState } from "react";
 import { ContextState } from "../Context/ChatProvider";
 import { AddIcon } from "@chakra-ui/icons";
 import ChatLoading from "./ChatLoading";
-import { getSender } from "../config/ChatLogic";
+import { getSender, getSenderPic } from "../config/ChatLogic";
 import GroupChatModal from "../Group_chatpage/GroupChatModal";
 import { BaseUrl } from "../config/Baseurl";
+import { FaUserGroup } from "react-icons/fa6";
+import GroupImage from "../grp.png";
 
 const MyChats = ({ fetchAgain }) => {
   const { user, selectedChat, setSelectedChat, chats, setChats } =
@@ -109,8 +108,7 @@ const MyChats = ({ fetchAgain }) => {
             >
               {/* if we want to display modal on click with the button then wrap the button with the component which is going to visible on click */}
               <Box className=" flex absolute bottom-3 right-3 z-10 shadow-md rounded-xl">
-                <GroupChatModal
-                >
+                <GroupChatModal>
                   <Button
                     className="flex  gap-3 justify-between items-center"
                     _hover={{ background: "transparent", color: "purple.400" }}
@@ -122,7 +120,7 @@ const MyChats = ({ fetchAgain }) => {
                 </GroupChatModal>
               </Box>
             </Box>
-
+            
             <Box
               display="flex"
               flexDir="column"
@@ -158,7 +156,13 @@ const MyChats = ({ fetchAgain }) => {
                       borderRadius={{ base: "2xl", md: "xl" }}
                       key={chat._id}
                     >
-                      <div className="flex flex-col">
+                      <div className="flex flex-row items-center gap-4">
+                        <Image w={16} h={16} mt={1.5} borderRadius={40} bgColor={"purple.500"} color={"white"}
+                        src={!chat.isGroupChat
+                            ? getSenderPic(loggedUser, chat.users)
+                            : GroupImage
+                        }/>
+                        <div className="flex flex-col">
                         <Text>
                           {!chat.isGroupChat
                             ? getSender(loggedUser, chat.users)
@@ -173,6 +177,8 @@ const MyChats = ({ fetchAgain }) => {
                               : chat.latestMessage.content}
                           </Text>
                         )}
+                        </div>
+                        
                       </div>
                     </Box>
                   ))}
@@ -181,6 +187,7 @@ const MyChats = ({ fetchAgain }) => {
                 <ChatLoading />
               )}
             </Box>
+            
           </TabPanel>
         </TabPanels>
       </Tabs>

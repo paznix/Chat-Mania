@@ -17,12 +17,15 @@ import {
   useToast,
   Spinner,
 } from "@chakra-ui/react";
-import { ViewIcon } from "@chakra-ui/icons";
 import { ContextState } from "../Context/ChatProvider";
 import UserBadgeItem from "./UserBadgeItem";
 import axios from "axios";
 import { BaseUrl } from "../config/Baseurl";
 import UserListItem from "../ChatBox_Pages/UsersSideDrawer/UserListItem";
+import { IoMdInformationCircleOutline } from "react-icons/io";
+
+
+
 const UpdateGroupChat = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
   const [groupChatName, setGroupChatName] = useState();
   const [search, setSearch] = useState();
@@ -205,26 +208,40 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
 
   return (
     <>
-      <IconButton onClick={onOpen} icon={<ViewIcon />} />
+     <IconButton
+          display={{ base: "flex" }}
+          icon={<IoMdInformationCircleOutline className="text-2xl "/>}
+          onClick={onOpen}
+          bgColor={"transparent"}
+          _hover={{bgColor:"transparent"}}
+          color={"purple.700"}
+        />
       <Modal size="md" isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent
+          mx={5}
+          px={6}
+          pt={6}
+          pb={2}
+          transitionTimingFunction="ease-in"
+          borderRadius={"2xl"}
+        >
           <ModalHeader
             fontSize="35px"
-            fontFamily="Work sans"
+            fontFamily="Roboto"
             display="flex"
             justifyContent="center"
           >
             {selectedChat.chatName}
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton className="p-3" size="xl" />
           <ModalBody
             display="flex"
             justifyContent="space-between"
             alignItems="center"
             flexDir="column"
           >
-            <Box display="flex" justifyContent="flex-start" alignItems="center">
+            <Box display="flex" justifyContent="flex-start" alignItems="center" mb={3}>
               {selectedChat.users.map((u) => (
                 <UserBadgeItem user={u} handleRemove={() => handleRemove(u)} />
               ))}
@@ -239,10 +256,12 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
 
               <Button
                 variant="solid"
-                colorScheme="teal"
+                bgColor="transparent"
+                color={"purple.500"}
                 ml={1}
                 isLoading={renameLoading}
                 onClick={handleRename}
+                _hover={{ bgColor: "transparent", color: "purple.400" }}
               >
                 Update
               </Button>
@@ -270,7 +289,12 @@ const UpdateGroupChat = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="red" mr={3} onClick={() => handleRemove(user)}>
+            <Button
+              color={"red.500"}
+              bgColor={"transparent"}
+              _hover={{ bgColor: "transparent", color: "red.300" }}
+              onClick={() => handleRemove(user)}
+            >
               Leave Group
             </Button>
           </ModalFooter>

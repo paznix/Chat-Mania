@@ -16,7 +16,7 @@ import {
 import { Button } from "@chakra-ui/button";
 import React, { useState } from "react";
 import { ContextState } from "../Context/ChatProvider";
-import ProfileModal from "./ProfileModal";
+import ProfileModal from "./UserProfileModal";
 import { useNavigate } from "react-router-dom";
 import { BaseUrl } from "../config/Baseurl";
 import {

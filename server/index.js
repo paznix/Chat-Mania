@@ -2,12 +2,14 @@ const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const { TokenExpiredError } = require("jsonwebtoken");
 const AudioCall = require("./models/audioCall");
+const updateUserRoutes = require("./routes/updateUserRoutes");
 
 // const {notFound,errorHandler} =require("./middleware/errorMiddleware");
 // require('dotenv').config({path:'./.env'})
@@ -15,12 +17,16 @@ require("dotenv").config({ path: __dirname + "../" });
 const app = express();
 connectDB();
 
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 app.use(express.json());
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/update", updateUserRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello");
@@ -182,5 +188,6 @@ io.on("connection", (socket) => {
     console.log(`Received file: ${data.name}`);
     
   });
+
   
 });

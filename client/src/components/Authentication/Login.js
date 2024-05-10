@@ -92,7 +92,7 @@ const Login = () => {
 
     <FormControl className='border-purple-700/40 border-hidden' id='email' isRequired>
      <FormLabel color={"purple.470"} fontWeight={"semibold"}>Email</FormLabel>
-     <Input  color={"purple.400"} value={email} placeholder='chatmania@example.com' onChange={(e)=>setEmail(e.target.value)}/>
+     <Input  color={"purple.400"} value={email} placeholder='guest@chatmania.com' onChange={(e)=>setEmail(e.target.value)}/>
     </FormControl>
 
     <FormControl   id='password' isRequired>
@@ -108,9 +108,16 @@ const Login = () => {
     </FormControl>
 
 
-    <button className="w-full bg-purple-500 hover:bg-purple-400 transition rounded-lg py-2.5 font-medium mt-5 text-white" onClick={submitHandler} isLoading={loading}>
-      Login
-    </button>
+    <Button
+        className="w-full bg-purple-500 hover:bg-purple-400 transition rounded-lg py-2.5 text-white font-medium mt-5"
+        onClick={submitHandler}
+        isLoading={loading}
+        color={"white"}
+        bgColor={"purple.500"}
+        _hover={{bgColor:"purple.400"}}
+      >
+        Login
+      </Button>
     {/* <Button
       colorScheme="blue"
       width="100%"
@@ -120,8 +127,8 @@ const Login = () => {
     >Login</Button> */}
     
     <button className="w-full bg-[#bf74f7]/30 hover:bg-[#bf74f7]/15 transition py-2.5 rounded-lg" onClick={()=> {
-      setEmail("guest@example.com");
-      setPassword("123456");
+      setEmail("guest@chatmania.com");
+      setPassword("Guest@1234");
     }}>
       Get GUEST user credentials
     </button>

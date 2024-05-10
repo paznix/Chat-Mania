@@ -43,16 +43,16 @@ const Signup = () => {
     if (pics.type == "image/jpeg" || pics.type == "image/png") {
       const data = new FormData();
       data.append("file", pics);
-      data.append("upload_preset", "chat-app");
-      data.append("cloud_name", "daruus6qx");
-      fetch("https://api.cloudinary.com/v1_1/daruus6qx/image/upload", {
+      data.append("upload_preset", "chatmania");
+      data.append("cloud_name", "maniapaznic");
+      fetch("https://api.cloudinary.com/v1_1/maniapaznic/image/upload", {
         method: "post",
         body: data,
       })
         .then((res) => res.json())
         .then((data) => {
           setPic(data.url.toString());
-          // console.log(data.url.toString());
+          console.log(data.url.toString());
           setLoading(false);
         })
         .catch((err) => {
@@ -241,13 +241,16 @@ const Signup = () => {
         />
       </FormControl>
 
-      <button
+      <Button
         className="w-full bg-purple-500 hover:bg-purple-400 transition rounded-lg py-2.5 text-white font-medium mt-5"
         onClick={submitHandler}
         isLoading={loading}
+        color={"white"}
+        bgColor={"purple.500"}
+        _hover={{bgColor:"purple.400"}}
       >
         Sign Up
-      </button>
+      </Button>
       {/* <Button
         colorScheme="blue"
         width="100%"

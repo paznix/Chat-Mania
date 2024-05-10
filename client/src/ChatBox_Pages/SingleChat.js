@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/ChatLogic";
+import UserProfileModal from "./UserProfileModal";
 import ProfileModal from "./ProfileModal";
 import UpdateGroupChat from "../Group_chatpage/UpdateGroupChat";
 import axios from "axios";
@@ -25,6 +26,7 @@ import animationData from "../animations/typing.json";
 import Lottie from "react-lottie";
 import { IoSend } from "react-icons/io5";
 import { ImAttachment } from "react-icons/im";
+import { IoMdInformationCircleOutline } from "react-icons/io";
 
 //socket code start
 import io from "socket.io-client";
@@ -251,16 +253,22 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               color={"purple.700"}
               size={"2px"}
             />
+
             {messages &&
               (!selectedChat.isGroupChat ? (
-                <>{getSender(user, selectedChat.users)}</>
+                <>
+                  {getSender(user, selectedChat.users)}
+                  <ProfileModal
+                    user={getSenderFull(user, selectedChat.users)}
+                  />
+                </>
               ) : (
                 <>
                   {selectedChat.chatName.toUpperCase()}
                   <UpdateGroupChat
+                    fetchMessages={fetchMessages}
                     fetchAgain={fetchAgain}
                     setFetchAgain={setFetchAgain}
-                    fetchMessages={fetchMessages}
                   />
                 </>
               ))}
@@ -294,9 +302,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 {istyping ? (
                   <Lottie
                     options={defaultOptions}
-                    height={250}
-                    width={100}
-                    style={{ marginBottom: 0, marginLeft: 12,marginTop:10, background:"transparent" }}
+                    height={50}
+                    width={50}
+                    style={{ marginBottom: 0, marginLeft: 33,marginTop:5, background:"transparent" }}
                   />
                 ) : (
                   <></>

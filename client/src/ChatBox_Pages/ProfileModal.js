@@ -11,14 +11,11 @@ import {
   ModalBody,
   ModalCloseButton,
 } from "@chakra-ui/react";
-import { ViewIcon } from "@chakra-ui/icons";
-import { ContextState } from "../Context/ChatProvider";
-import { useNavigate } from "react-router-dom";
+import { IoMdInformationCircleOutline } from "react-icons/io";
 
-const ProfileModal = ({ children }) => {
+
+const ProfileModal = ({user, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { user } = ContextState();
-  const navigate = useNavigate();
 
   return (
     <>
@@ -27,8 +24,11 @@ const ProfileModal = ({ children }) => {
       ) : (
         <IconButton
           display={{ base: "flex" }}
-          icon={<ViewIcon />}
+          icon={<IoMdInformationCircleOutline className="text-2xl "/>}
           onClick={onOpen}
+          bgColor={"transparent"}
+          _hover={{bgColor:"transparent"}}
+          color={"purple.700"}
         />
       )}
 
@@ -71,18 +71,8 @@ const ProfileModal = ({ children }) => {
                 {user.email}
               </Text>
             </ModalBody>
-
-            <div className="flex justify-center items-center mt-2">
-              <button
-                className=" px-3 py-1 rounded-lg text-red-600 font-semibold font-pal"
-                onClick={() => {
-                  localStorage.removeItem("userinfo");
-                  navigate("/");
-                }}
-              >
-                Logout
-              </button>
-            </div>
+            
+            
           
         </ModalContent>
       </Modal>
