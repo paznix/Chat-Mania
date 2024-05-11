@@ -20,6 +20,9 @@ import GroupChatModal from "../Group_chatpage/GroupChatModal";
 import { BaseUrl } from "../config/Baseurl";
 import { FaUserGroup } from "react-icons/fa6";
 import GroupImage from "../grp.png";
+import CallLogElement from "../CallElements/CallLog";
+import { MdWifiCalling3 } from "react-icons/md";
+import { IoChatboxEllipses } from "react-icons/io5";
 
 const MyChats = ({ fetchAgain }) => {
   const { user, selectedChat, setSelectedChat, chats, setChats } =
@@ -78,7 +81,10 @@ const MyChats = ({ fetchAgain }) => {
             width={"50%"}
             py={3}
           >
-            My Chats
+            <div className="flex gap-4 items-center">
+              <IoChatboxEllipses className="text-xl" />
+              My Chats
+            </div>
           </Tab>
           <Tab
             fontFamily={"Roboto"}
@@ -92,7 +98,9 @@ const MyChats = ({ fetchAgain }) => {
             width={"50%"}
             py={3}
           >
-            Voice Calls
+            <div className="flex gap-4 items-center">
+              <MdWifiCalling3 className="text-xl"/> Calls
+            </div>
           </Tab>
         </TabList>
         <TabPanels>
@@ -120,7 +128,7 @@ const MyChats = ({ fetchAgain }) => {
                 </GroupChatModal>
               </Box>
             </Box>
-            
+
             <Box
               display="flex"
               flexDir="column"
@@ -157,28 +165,35 @@ const MyChats = ({ fetchAgain }) => {
                       key={chat._id}
                     >
                       <div className="flex flex-row items-center gap-4">
-                        <Image w={16} h={16} mt={1.5} borderRadius={40} bgColor={"purple.500"} color={"white"}
-                        src={!chat.isGroupChat
-                            ? getSenderPic(loggedUser, chat.users)
-                            : GroupImage
-                        }/>
-                        <div className="flex flex-col">
-                        <Text>
-                          {!chat.isGroupChat
-                            ? getSender(loggedUser, chat.users)
-                            : chat.chatName}
-                        </Text>
-                        {chat.latestMessage && (
-                          <Text fontSize="xs">
-                            <b>{chat.latestMessage.sender.name} : </b>
-                            {chat.latestMessage.content.length > 50
-                              ? chat.latestMessage.content.substring(0, 51) +
-                                "..."
-                              : chat.latestMessage.content}
+                        <Image
+                          w={16}
+                          h={16}
+                          mt={1.5}
+                          borderRadius={40}
+                          bgColor={"purple.500"}
+                          color={"white"}
+                          src={
+                            !chat.isGroupChat
+                              ? getSenderPic(loggedUser, chat.users)
+                              : GroupImage
+                          }
+                        />
+                        <div className="flex flex-col mt-1">
+                          <Text>
+                            {!chat.isGroupChat
+                              ? getSender(loggedUser, chat.users)
+                              : chat.chatName}
                           </Text>
-                        )}
+                          {chat.latestMessage && (
+                            <Text fontSize="xs">
+                              <b>{chat.latestMessage.sender.name} : </b>
+                              {chat.latestMessage.content.length > 50
+                                ? chat.latestMessage.content.substring(0, 51) +
+                                  "..."
+                                : chat.latestMessage.content}
+                            </Text>
+                          )}
                         </div>
-                        
                       </div>
                     </Box>
                   ))}
@@ -187,7 +202,9 @@ const MyChats = ({ fetchAgain }) => {
                 <ChatLoading />
               )}
             </Box>
-            
+          </TabPanel>
+          <TabPanel>
+            <CallLogElement />
           </TabPanel>
         </TabPanels>
       </Tabs>

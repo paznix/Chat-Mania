@@ -43,7 +43,8 @@
         "socket.io-client": "^4.7.5",
         "socketio-file-upload": "^0.7.3",
         "web-vitals": "^2.1.4",
-        "yup": "^1.4.0"
+        "yup": "^1.4.0",
+        "zego-express-engine-webrtc": "^3.4.0"
     },
     "scripts": {
         "start": "react-scripts start",

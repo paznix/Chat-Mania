@@ -3,19 +3,16 @@ import { ContextState } from "../Context/ChatProvider";
 import {
   Box,
   Button,
-  Center,
   FormControl,
   IconButton,
   Input,
   Spinner,
   Text,
   useToast,
-  Divider,
   FormLabel,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import { getSender, getSenderFull } from "../config/ChatLogic";
-import UserProfileModal from "./UserProfileModal";
 import ProfileModal from "./ProfileModal";
 import UpdateGroupChat from "../Group_chatpage/UpdateGroupChat";
 import axios from "axios";
@@ -27,10 +24,15 @@ import Lottie from "react-lottie";
 import { IoSend } from "react-icons/io5";
 import { ImAttachment } from "react-icons/im";
 import { IoMdInformationCircleOutline } from "react-icons/io";
+import UploadFile from "../Helper/UploadFile";
+import CallDialog from "../CallElements/CallDialog";
+import VideoDialog from "../CallElements/VideoDialog";
+import IncomingDialog from "../CallElements/IncomingDialog";
+import { PushToAudioCallQueue, UpdateAudioCallDialog } from "../redux/audioCall";
+
 
 //socket code start
 import io from "socket.io-client";
-import { px } from "framer-motion";
 const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 //socket code end
@@ -38,7 +40,12 @@ var socket, selectedChatCompare;
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState();
-  const [newmessages, setNewMessages] = useState("");
+  const [newmessages, setNewMessages] = useState({
+    sender: "",
+    content: "",
+    chat: "",
+    imageUrl: "",
+  });
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
@@ -102,7 +109,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setNewMessages("");
         const { data } = await axios.post(
           `${BaseUrl}messages`,
-          { chatId: selectedChat, content: newmessages },
+          {
+            chatId: selectedChat,
+            content: newmessages,
+            imageUrl: newmessages.imageUrl,
+          },
           config
         );
         socket.emit("new message", data);
@@ -134,7 +145,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         setNewMessages("");
         const { data } = await axios.post(
           `${BaseUrl}messages`,
-          { chatId: selectedChat, content: newmessages },
+          {
+            chatId: selectedChat,
+            content: newmessages,
+            imageUrl: newmessages.imageUrl,
+          },
           config
         );
         socket.emit("new message", data);
@@ -157,18 +172,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     await buttonSend();
   };
 
-  const fileUpload = require("socketio-file-upload");
+  const handleUploadFile = async (e) => {
+    const file = e.target.files[0];
+    const uploadPhoto = await UploadFile(file);
 
-  const sendFile = async (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = (e) => {
-      const base64String = e.target.result.split(",")[1]; //remove data uri prefix
-      socket.emit("file-upload", { name: file.name, data: base64String });
-    };
-
-    reader.readAsDataURL(file);
+    setNewMessages((preve) => {
+      return {
+        ...preve,
+        imageUrl: uploadPhoto.url,
+      };
+    });
   };
 
   useEffect(() => {
@@ -232,47 +245,55 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     <>
       {selectedChat ? (
         <>
-          <Text
-            className="font-medium"
-            fontFamily="Roboto"
-            fontSize={{ base: "28px", md: "30px" }}
-            pb={3}
-            px={2}
-            w="100%"
-            display="flex"
-            justifyContent={{ base: "space-between" }}
-            alignItems="center"
-            color={"purple.700"}
-          >
-            <IconButton
-              display={{ base: "flex", md: "none" }}
-              icon={<ArrowBackIcon />}
-              onClick={() => setSelectedChat("")}
-              background={"transparent"}
-              _hover={{ background: "transparent" }}
+          <div className="w-full flex items-center">
+            <Text
+              className="font-medium"
+              fontFamily="Roboto"
+              fontSize={{ base: "20px", md: "30px" }}
+              pb={3}
+              px={2}s0
+              w="100%"
+              display="flex"
+              justifyContent={{ base: "space-between" }}
+              alignItems="center"
               color={"purple.700"}
-              size={"2px"}
-            />
+            >
+              <IconButton
+                display={{ base: "flex", md: "none" }}
+                icon={<ArrowBackIcon />}
+                onClick={() => setSelectedChat("")}
+                background={"transparent"}
+                _hover={{ background: "transparent" }}
+                color={"purple.700"}
+                size={"2px"}
+              />
 
-            {messages &&
-              (!selectedChat.isGroupChat ? (
-                <>
-                  {getSender(user, selectedChat.users)}
-                  <ProfileModal
-                    user={getSenderFull(user, selectedChat.users)}
-                  />
-                </>
-              ) : (
-                <>
-                  {selectedChat.chatName.toUpperCase()}
-                  <UpdateGroupChat
-                    fetchMessages={fetchMessages}
-                    fetchAgain={fetchAgain}
-                    setFetchAgain={setFetchAgain}
-                  />
-                </>
-              ))}
-          </Text>
+              {messages &&
+                (!selectedChat.isGroupChat ? (
+                  <>
+                    {getSender(user, selectedChat.users)}
+
+                    <ProfileModal
+                      user={getSenderFull(user, selectedChat.users)}
+                    />
+                  </>
+                ) : (
+                  <>
+                    {selectedChat.chatName.toUpperCase()}
+                    <UpdateGroupChat
+                      fetchMessages={fetchMessages}
+                      fetchAgain={fetchAgain}
+                      setFetchAgain={setFetchAgain}
+                    />
+                  </>
+                ))}
+            </Text>
+            <div className="flex items-center justify-center pb-3 mr-3 gap-2">
+              <CallDialog
+              sender = {getSenderFull(user, selectedChat.users)}/>
+              <VideoDialog/>
+            </div>
+          </div>
 
           <Box
             className="bg-purple-100/25 outline-purple-300/10 outline text-white shadow-xl"
@@ -286,6 +307,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             overflow="hidden"
             fontFamily={"roboto"}
           >
+            {/* Image Preview */}
+            {newmessages.imageUrl && (
+              <div className="w-1/2 h-1/2 bg-black/10 backdrop-blur-xl">
+                <img
+                  src={newmessages.imageUrl}
+                  alt="preview"
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            )}
+
             {/* messages here */}
             {loading ? (
               <Spinner
@@ -297,18 +329,25 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 color="purple.700"
               />
             ) : (
-              <div className="messages">
-                <ScrollableChat messages={messages} />
-                {istyping ? (
-                  <Lottie
-                    options={defaultOptions}
-                    height={50}
-                    width={50}
-                    style={{ marginBottom: 0, marginLeft: 33,marginTop:5, background:"transparent" }}
-                  />
-                ) : (
-                  <></>
-                )}
+              <div className="">
+                <div className="messages">
+                  <ScrollableChat messages={messages} />
+                  {istyping ? (
+                    <Lottie
+                      options={defaultOptions}
+                      height={50}
+                      width={50}
+                      style={{
+                        marginBottom: 0,
+                        marginLeft: 33,
+                        marginTop: 5,
+                        background: "transparent",
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
             )}
 
@@ -329,7 +368,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     borderRadius={12}
                     pl={6}
                     placeholder="Type your message here..."
-                    value={newmessages}
+                    value={newmessages.content}
                     onChange={typingHandler}
                     _hover={{ outline: "none" }}
                     _focus={{ outline: "none", border: "none" }}
@@ -344,7 +383,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         <Input
                           type="file"
                           className="hidden"
-                          onChange={sendFile}
+                          onChange={handleUploadFile}
                         />
                         <ImAttachment />
                       </FormLabel>
