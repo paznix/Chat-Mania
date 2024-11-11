@@ -9,6 +9,7 @@ const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
 const AudioCall = require("./models/audioCall");
 const updateUserRoutes = require("./routes/updateUserRoutes");
+const imageRoutes = require("./routes/imageRoutes");
 
 // const {notFound,errorHandler} =require("./middleware/errorMiddleware");
 // require('dotenv').config({path:'./.env'})
@@ -26,6 +27,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/update", updateUserRoutes);
+app.use("/api/images", imageRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello");
