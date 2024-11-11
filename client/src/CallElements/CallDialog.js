@@ -317,17 +317,18 @@ const CallDialog = ({ sender, children }) => {
         />
       )}
 
-      <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal size="lg" isOpen={isOpen} onClose={onClose} isCentered >
         <ModalOverlay />
         <ModalContent
           mx={5}
-          height="420px"
+          height={{base:"380px", md:"420px"}}
           p={6}
           transitionTimingFunction="ease-in"
           borderRadius={"2xl"}
+        
         >
           <ModalHeader
-            fontSize="40px"
+            fontSize={{base:"28px",md:"40px"}}
             fontFamily="Roboto"
             display="flex"
             justifyContent="space-around"
@@ -344,18 +345,18 @@ const CallDialog = ({ sender, children }) => {
           >
             <Image
               borderRadius="full"
-              boxSize="150px"
+              boxSize={{base:"100px", md:"150px"}}
               src={user.pic}
               alt={user.name}
             />
             <Image
               borderRadius="full"
-              boxSize="150px"
+              boxSize={{base:"100px", md:"150px"}}
               src={sender.pic}
               alt={sender.name}
             />
           </ModalBody>
-          <div className="w-full flex justify-end items-baseline pt-10">
+          <div className="w-full flex justify-center items-baseline pt-10 ">
             <Button
               color={"white"}
               bgColor={"red"}

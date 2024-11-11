@@ -1,6 +1,9 @@
+
 const url = `https://api.cloudinary.com/v1_1/maniapaznic/image/upload`
 
-const UploadFile = async(file)=>{
+
+
+export const UploadFile = async(file)=>{
     const formData = new FormData()
     formData.append('file',file)
     formData.append("upload_preset","chatmania")
@@ -14,5 +17,3 @@ const UploadFile = async(file)=>{
 
     return responseData
 }
-
-export default UploadFile;

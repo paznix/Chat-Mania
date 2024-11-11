@@ -24,12 +24,10 @@ import Lottie from "react-lottie";
 import { IoSend } from "react-icons/io5";
 import { ImAttachment } from "react-icons/im";
 import { IoMdInformationCircleOutline } from "react-icons/io";
-import UploadFile from "../Helper/UploadFile";
 import CallDialog from "../CallElements/CallDialog";
 import VideoDialog from "../CallElements/VideoDialog";
 import IncomingDialog from "../CallElements/IncomingDialog";
-import { PushToAudioCallQueue, UpdateAudioCallDialog } from "../redux/audioCall";
-
+import uploadFileChat from "../Helper/uploadFileChat";
 
 //socket code start
 import io from "socket.io-client";
@@ -40,15 +38,12 @@ var socket, selectedChatCompare;
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState();
-  const [newmessages, setNewMessages] = useState({
-    sender: "",
-    content: "",
-    chat: "",
-    imageUrl: "",
-  });
+  const [newmessages, setNewMessages] = useState();
   const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
+  const [file, setFile] = useState();
+  const [newImage, setNewImage] = useState("");
   const toast = useToast();
 
   const defaultOptions = {
@@ -112,7 +107,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           {
             chatId: selectedChat,
             content: newmessages,
-            imageUrl: newmessages.imageUrl,
           },
           config
         );
@@ -148,7 +142,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           {
             chatId: selectedChat,
             content: newmessages,
-            imageUrl: newmessages.imageUrl,
           },
           config
         );
@@ -172,17 +165,25 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     await buttonSend();
   };
 
-  const handleUploadFile = async (e) => {
-    const file = e.target.files[0];
-    const uploadPhoto = await UploadFile(file);
-
-    setNewMessages((preve) => {
-      return {
-        ...preve,
-        imageUrl: uploadPhoto.url,
-      };
-    });
+  const onFileChange = async (e) => {
+    setFile(e.target.files[0]);
+    setNewMessages(e.target.files[0].name);
   };
+
+  useEffect(() => {
+    const setImage = async () => {
+      if (file) {
+        const data = new FormData();
+        data.append("file", file.name);
+        data.append("file", file);
+
+        let response = await uploadFileChat(data);
+
+        setNewImage(response.data);
+      }
+    };
+    setImage();
+  }, [file]);
 
   useEffect(() => {
     socket = io(ENDPOINT);
@@ -249,12 +250,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             <Text
               className="font-medium"
               fontFamily="Roboto"
-              fontSize={{ base: "20px", md: "30px" }}
+              fontSize={{ base: "24px", md: "30px" }}
               pb={3}
-              px={2}s0
+              px={2}
+              s0
               w="100%"
               display="flex"
-              justifyContent={{ base: "space-between" }}
+              justifyContent={{ base: "start" }}
               alignItems="center"
               color={"purple.700"}
             >
@@ -266,20 +268,30 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 _hover={{ background: "transparent" }}
                 color={"purple.700"}
                 size={"2px"}
+                pr={4}
               />
 
               {messages &&
                 (!selectedChat.isGroupChat ? (
+                  <>{getSender(user, selectedChat.users)}</>
+                ) : (
+                  <>{selectedChat.chatName.toUpperCase()}</>
+                ))}
+            </Text>
+            <div className="flex items-center justify-center pb-3 mr-3 gap-2">
+              {" "}
+              {messages &&
+                (!selectedChat.isGroupChat ? (
                   <>
-                    {getSender(user, selectedChat.users)}
-
                     <ProfileModal
                       user={getSenderFull(user, selectedChat.users)}
+                    />
+                    <CallDialog
+                      sender={getSenderFull(user, selectedChat.users)}
                     />
                   </>
                 ) : (
                   <>
-                    {selectedChat.chatName.toUpperCase()}
                     <UpdateGroupChat
                       fetchMessages={fetchMessages}
                       fetchAgain={fetchAgain}
@@ -287,11 +299,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     />
                   </>
                 ))}
-            </Text>
-            <div className="flex items-center justify-center pb-3 mr-3 gap-2">
-              <CallDialog
-              sender = {getSenderFull(user, selectedChat.users)}/>
-              <VideoDialog/>
             </div>
           </div>
 
@@ -308,7 +315,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             fontFamily={"roboto"}
           >
             {/* Image Preview */}
-            {newmessages.imageUrl && (
+            {/* {newmessages.imageUrl && (
               <div className="w-1/2 h-1/2 bg-black/10 backdrop-blur-xl">
                 <img
                   src={newmessages.imageUrl}
@@ -316,7 +323,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   className="w-full h-full object-contain"
                 />
               </div>
-            )}
+            )} */}
 
             {/* messages here */}
             {loading ? (
@@ -360,6 +367,24 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
               flexDir={"row"}
               className="drop-shadow-xl"
             >
+              <div className="bg-transparent flex justify-center items-center l z-10">
+                <FormControl>
+                  <FormLabel
+                    type="button"
+                    className="text-2xl text-purple-400 scale-125 hover:scale-150 ease-in-out px-0.5 pb-1 ml-3 duration-200  hover:cursor-pointer"
+                    cente
+                  >
+                    <ImAttachment />
+                  </FormLabel>
+                  <Input
+                    type="file"
+                    className="hidden"
+                    onChange={(e) => {
+                      onFileChange(e);
+                    }}
+                  />
+                </FormControl>
+              </div>
               <FormControl isRequired onKeyDown={sendMessage}>
                 {/* onKeyDown is used when we click enter this run */}
 
@@ -368,27 +393,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     borderRadius={12}
                     pl={6}
                     placeholder="Type your message here..."
-                    value={newmessages.content}
+                    value={newmessages}
                     onChange={typingHandler}
                     _hover={{ outline: "none" }}
                     _focus={{ outline: "none", border: "none" }}
                   />
-                  <div className="bg-transparent flex justify-center items-center l z-10">
-                    <FormControl>
-                      <FormLabel
-                        type="button"
-                        className="text-2xl text-purple-400 scale-125 hover:scale-150 ease-in-out px-0.5 mt-2 ml-3 duration-200  hover:cursor-pointer"
-                        cente
-                      >
-                        <Input
-                          type="file"
-                          className="hidden"
-                          onChange={handleUploadFile}
-                        />
-                        <ImAttachment />
-                      </FormLabel>
-                    </FormControl>
-                  </div>
                 </div>
               </FormControl>
 

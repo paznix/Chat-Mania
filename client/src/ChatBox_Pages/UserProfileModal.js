@@ -22,7 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { MdModeEdit } from "react-icons/md";
 import { BaseUrl } from "../config/Baseurl";
 import socketIOClient from "socket.io-client";
-import UploadFile from "../Helper/UploadFile";
+import { UploadFile } from "../Helper/UploadFile";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { setUser } from "../redux/userSlice";
